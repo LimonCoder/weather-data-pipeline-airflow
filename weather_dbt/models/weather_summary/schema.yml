@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: 'weather_dwh'
+    description: 'Weather data warehouse'
+    database: 'weather_dwh'
+    schema: 'staging'
+    tables:
+      - name: 'clean_weather_data'
+        description: 'Cleaned weather data from staging'
+
+models:
+  - name: weather_summary
+    description: "Daily aggregated weather summary data"
+    columns:
+      - name: avg_temp
+        description: "Average daily temperature (°C)"
+        tests:
+          - not_null
+#          - dbt_utils.accepted_range:
+#              min_value: -50
+#              max_value: 60
+
+      - name: avg_humidity
+        description: "Average daily humidity (%)"
+        tests:
+          - not_null
+#          - dbt_utils.accepted_range:
+#              min_value: 0
+#              max_value: 100
+
+      - name: max_temp
+        description: "Maximum recorded temperature (°C) for the given date"
+        tests:
+          - not_null
+#          - dbt_utils.accepted_range:
+#              min_value: -50
+#              max_value: 60
+
+      - name: min_temp
+        description: "Minimum recorded temperature (°C) for the given date"
+        tests:
+          - not_null
+#          - dbt_utils.accepted_range:
+#              min_value: -50
+#              max_value: 60
+
