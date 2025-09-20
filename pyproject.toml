@@ -1,0 +1,17 @@
+[project]
+name = "real-time-city-monitor-airflow"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "apache-airflow==3.0.*",
+    "apache-airflow-providers-mysql>=6.3,<7.0",
+    "dbt-postgres>=1.7.0",
+    "dbt-core==1.7.15",
+    "kafka-python>=2.2.15",
+    "pandas>=2.3.2",
+    "python-dotenv>=1.1.1",
+    "sqlalchemy>=1.4.54",
+    "psycopg2-binary>=2.9.10",
+]
