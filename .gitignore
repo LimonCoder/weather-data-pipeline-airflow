@@ -1,4 +1,35 @@
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# dbt
 target/
 dbt_packages/
 logs/
+*.log
+
+# Airflow
+logs/
+dags/__pycache__/
+plugins/__pycache__/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+weather_dbt/package-lock.yml

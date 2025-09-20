@@ -3,7 +3,7 @@ weather_dbt:
   outputs:
     dev:
       type: postgres
-      host: localhost
+      host: host.docker.internal
       port: 5432
       user: airflow
       password: 'airflow1234@#'
