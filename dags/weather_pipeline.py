@@ -85,9 +85,25 @@ def weather_pipeline():
         """
         return "cd /opt/airflow/weather_dbt && dbt run --profiles-dir /opt/airflow/weather_dbt"
 
+    @task.bash
+    def test_transformed_weather_data():
+        """
+        Runs all dbt models in the project.
+        """
+        return "cd /opt/airflow/weather_dbt && dbt test --profiles-dir /opt/airflow/weather_dbt"
+
+    @task.bash
+    def snapshot_transformed_weather_data():
+        """
+        Runs all dbt models in the project.
+        """
+        return "cd /opt/airflow/weather_dbt && dbt snapshot --profiles-dir /opt/airflow/weather_dbt"
+
     # Task dependencies
     raw_data = extract_weather_data()
     clean_data = clean_weather_data(raw_data)
-    clean_data >> transform_weather_data()
+    clean_data >> transform_weather_data() >> test_transformed_weather_data() >> snapshot_transformed_weather_data()
+
+
 
 weather_pipeline()
