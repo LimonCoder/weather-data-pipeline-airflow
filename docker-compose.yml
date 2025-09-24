@@ -70,20 +70,24 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-dbt-postgres==1.7.0}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-dbt-postgres==1.7.0 kafka-python>=2.2.15 requests>=2.32.0 python-dotenv>=1.1.1}
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
+    # Add /opt/airflow to Python path so modules can be imported
+    PYTHONPATH: '/opt/airflow'
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
     - ${AIRFLOW_PROJ_DIR:-.}/weather_dbt:/opt/airflow/weather_dbt
+    - ${AIRFLOW_PROJ_DIR:-.}/producer:/opt/airflow/producer
+    - ${AIRFLOW_PROJ_DIR:-.}/consumer:/opt/airflow/consumer
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
     # redis:
-    #   condition: service_healthy
+    #   condition: service_healthy`
     postgres:
       condition: service_healthy
 

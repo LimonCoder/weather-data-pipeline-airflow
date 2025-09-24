@@ -1,5 +1,4 @@
 import logging
-import time
 import requests
 from config.kafka import init_producer
 from config.logging import setup_logging
@@ -21,7 +20,14 @@ weather_api_list = {
 
 CITIES = ["Dhaka", "Chittagong", "Khulna", "Rajshahi", "Barisal", "Sylhet", "Rangpur", "Mymensingh"]
 
-producer = init_producer()
+# Initialize producer lazily to avoid connection errors on import
+_producer = None
+
+def get_producer():
+    global _producer
+    if _producer is None:
+        _producer = init_producer()
+    return _producer
 
 
 def fetch_weather_from_api(api_url):
@@ -37,6 +43,7 @@ def fetch_weather_from_api(api_url):
 
 
 def push_weather_data_to_kafka():
+    producer = get_producer()
     for api_name, api_url in weather_api_list.items():
         for city in CITIES:
             location_wise_api_endpoint = f"{api_url}&q={city},BD"
@@ -50,13 +57,3 @@ def push_weather_data_to_kafka():
                     logging.info(f"Produced weather data for {api_name} - {city}")
                 except Exception as e:
                     logging.error(f"Failed to produce data for {api_name} - {city} | Error: {e}")
-
-
-if __name__ == '__main__':
-    while True:
-        try:
-            push_weather_data_to_kafka()
-            time.sleep(15 * 60)
-        except Exception as e:
-            logging.critical(f"Unexpected error in main loop: {e}", exc_info=True)
-            time.sleep(60)

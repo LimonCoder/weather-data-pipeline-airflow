@@ -3,7 +3,9 @@ import logging
 import numpy as np
 from airflow.sdk import dag, task
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from producer.weather_producer import push_weather_data_to_kafka
 import pandas as pd
+import time
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -31,6 +33,17 @@ country_code = {
     catchup=False
 )
 def weather_pipeline():
+
+    @task
+    def ingestion_weather_data():
+        try:
+            push_weather_data_to_kafka()
+            logging.info(f'####(0) ingestion_weather_data')
+            return 1
+        except Exception as e:
+            logging.info(f"Unexpected error in ingestion_weather_data : {e}", exc_info=True)
+            return 0
+
     # Task 1: Extract Weather Data
     @task
     def extract_weather_data():
@@ -100,7 +113,10 @@ def weather_pipeline():
         return "cd /opt/airflow/weather_dbt && dbt snapshot --profiles-dir /opt/airflow/weather_dbt"
 
     # Task dependencies
+    ingest_task = ingestion_weather_data()
     raw_data = extract_weather_data()
+
+    ingest_task >> raw_data
     clean_data = clean_weather_data(raw_data)
     clean_data >> transform_weather_data() >> test_transformed_weather_data() >> snapshot_transformed_weather_data()
 

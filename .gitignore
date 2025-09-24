@@ -26,7 +26,9 @@ logs/
 logs/
 dags/__pycache__/
 plugins/__pycache__/
-
+config/__pycache__/
+consumer/__pycache__/
+producer/__pycache__/
 # OS
 .DS_Store
 Thumbs.db
