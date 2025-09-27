@@ -24,13 +24,6 @@ x-airflow-common:
     POSTGRES_PORT: ${POSTGRES_PORT}
     POSTGRES_DB: ${POSTGRES_DB}
   volumes:
-#    - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
-#    - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
-#    - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
-#    - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-#    - ${AIRFLOW_PROJ_DIR:-.}/weather_dbt:/opt/airflow/weather_dbt
-#    - ${AIRFLOW_PROJ_DIR:-.}/producer:/opt/airflow/producer
-#    - ${AIRFLOW_PROJ_DIR:-.}/consumer:/opt/airflow/consumer
      - ${AIRFLOW_PROJ_DIR:-.}:/opt/airflow
 
   user: "${AIRFLOW_UID:-50000}:0"
@@ -229,6 +222,13 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
     ports:
       - "9094:9094"
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: always
     networks:
       - kafka-network
   kafka-broker-2:
@@ -248,6 +248,13 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
     ports:
       - "9095:9095"
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: always
     networks:
       - kafka-network
   kafka-broker-3:
@@ -267,6 +274,13 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
     ports:
       - "9096:9096"
+    healthcheck:
+      test: ["CMD", "kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: always
     networks:
       - kafka-network
   kafka-ui:
@@ -287,14 +301,22 @@ services:
       - kafka-network
 
   weather-consumer:
-    <<: *airflow-common
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      *airflow-common-env
     command: python -m consumer.weather_consumer
     restart: always
     depends_on:
-      - kafka-broker-1
-      - kafka-broker-2
-      - kafka-broker-3
-      - postgres
+      kafka-broker-1:
+        condition: service_healthy
+      kafka-broker-2:
+        condition: service_healthy
+      kafka-broker-3:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
     networks:
       - kafka-network
 
