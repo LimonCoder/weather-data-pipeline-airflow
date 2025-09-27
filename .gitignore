@@ -35,3 +35,7 @@ Thumbs.db
 
 # Project specific
 weather_dbt/package-lock.yml
+.env
+.ipynb_checkpoints
+etl_pipeline.log
+etl_pipeline.log.*
