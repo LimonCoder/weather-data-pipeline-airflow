@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile*
+
+# Node / NPM / Yarn (if applicable)
+node_modules
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache
+.venv
+env/
+venv/
+
+# PHP / Laravel (if applicable)
+vendor/
+composer.lock
+storage/logs
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+
+# Airflow
+logs/
+dags/__pycache__/
+dags/*.pyc
+
+# Environment & Secrets
+.env
+*.env
+*.env.*
+
+# IDEs / Editors
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Tests & Coverage
+coverage/
+*.cover
+*.coverage
+*.lcov
+htmlcov/

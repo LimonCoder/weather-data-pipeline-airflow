@@ -115,10 +115,9 @@ def weather_pipeline():
     # Task dependencies
     ingest_task = ingestion_weather_data()
     raw_data = extract_weather_data()
-
-    ingest_task >> raw_data
     clean_data = clean_weather_data(raw_data)
-    clean_data >> transform_weather_data() >> test_transformed_weather_data() >> snapshot_transformed_weather_data()
+
+    ingest_task >> raw_data >> clean_data >> transform_weather_data() >> test_transformed_weather_data() >> snapshot_transformed_weather_data()
 
 
 

@@ -2,7 +2,7 @@ from kafka import KafkaProducer
 from kafka import KafkaConsumer
 import json
 
-KAFKA_BOOTSTRAP_SERVERS = ['localhost:9094', 'localhost:9095', 'localhost:9096']
+KAFKA_BOOTSTRAP_SERVERS = ['kafka-broker-1:9092', 'kafka-broker-2:9092', 'kafka-broker-3:9092']
 
 
 def init_producer():

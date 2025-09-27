@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # PostgreSQL configuration
-POSTGRES_USER = os.getenv('POSTGRES_USER', 'airflow')
-POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'airflow')
-POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
-POSTGRES_PORT = int(os.getenv('POSTGRES_PORT', '5432'))
-POSTGRES_DB = os.getenv('POSTGRES_DB', 'airflow')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST',)
+POSTGRES_PORT = int(os.getenv('POSTGRES_PORT'))
+POSTGRES_DB = os.getenv('POSTGRES_DB')
 
 
 def get_connection():
